@@ -1,0 +1,35 @@
+name: Daily Tokyo Weather Email
+
+on:
+  schedule:
+    # 每天早上 8:00 (JST) 运行 (Cron 表达式：分钟 小时 日期 月份 星期)
+    # JST (UTC+9) 的 8:00 对应 UTC 的 23:00
+    - cron: '0 23 * * *' 
+  workflow_dispatch:
+
+jobs:
+  send_email_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Run Weather Script and Send Email
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+          # 禁用 WhatsApp 相关的环境变量
+          CLAWDBOT_GATEWAY_URL: ""
+          CLAWDBOT_GATEWAY_TOKEN: ""
+          CLAWDBOT_MESSAGE_TARGET: ""
+        run: python weather_bot_cloud.py
