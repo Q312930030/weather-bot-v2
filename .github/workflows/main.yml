@@ -2,10 +2,9 @@ name: Daily Tokyo Weather Email
 
 on:
   schedule:
-    # 每天早上 8:00 (JST) 运行 (Cron 表达式：分钟 小时 日期 月份 星期)
-    # JST (UTC+9) 的 8:00 对应 UTC 的 23:00
+    # 每天早上 8:00 (JST) 运行 (UTC 23:00)
     - cron: '0 23 * * *' 
-  workflow_dispatch:
+  # 移除 workflow_dispatch 以简化
 
 jobs:
   send_email_report:
@@ -28,7 +27,6 @@ jobs:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-          # 禁用 WhatsApp 相关的环境变量
           CLAWDBOT_GATEWAY_URL: ""
           CLAWDBOT_GATEWAY_TOKEN: ""
           CLAWDBOT_MESSAGE_TARGET: ""
